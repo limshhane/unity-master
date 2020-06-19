@@ -8,4 +8,7 @@ public static class Constants {
 
 	//Sfx
 	public static string GAMEOVER_SFX = "GameOver";
+
+    //Chunk
+    public static int ObstacleSpawnFrequency = 3;
 }
