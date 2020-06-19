@@ -16,7 +16,6 @@
         #region Chunk & LevelVariable
         [Header("Management des chunks")]
 
-        [SerializeField] public GameObject chunkPrefab; // celui là à enlever
         [SerializeField] public GameObject firstSpawnPos;
         [SerializeField] public Transform actualChunkPos;
         [SerializeField] private Transform nextChunkPos;
@@ -90,9 +89,9 @@
             GameObject chunk = Instantiate(nextChunkTriggerPrefab, chunkList[5].transform.position, Quaternion.identity);
 
             Vector3 chunkCollider = chunk.GetComponent<BoxCollider>().size;
-            chunkCollider.x = chunkPrefab.GetComponent<Renderer>().bounds.size.x * 10;
+            chunkCollider.x = m_CurrentLevelGO.GetComponent<Renderer>().bounds.size.x * 10;
             chunkCollider.y = 500;
-            chunkCollider.z = chunkPrefab.GetComponent<Renderer>().bounds.size.z;
+            chunkCollider.z = m_CurrentLevelGO.GetComponent<Renderer>().bounds.size.z;
             chunk.transform.localScale = chunkCollider;
             return chunk;
         }
@@ -104,7 +103,7 @@
         }
         private void UpdateNextChunkPos()
         {
-            this.nextChunkPos.position = new Vector3(0, 0, nextChunkPos.position.z + chunkPrefab.GetComponent<Renderer>().bounds.size.z);
+            this.nextChunkPos.position = new Vector3(0, 0, nextChunkPos.position.z + m_CurrentLevelGO.GetComponent<Renderer>().bounds.size.z);
             //return nextChunkPos;
         }
 
