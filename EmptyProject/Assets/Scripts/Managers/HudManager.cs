@@ -55,7 +55,7 @@
         protected override void GameStatisticsChanged(GameStatisticsChangedEvent e)
         {
             //TO DO
-            m_TxtScore.text = e.eScore.ToString();
+            m_TxtScore.text = e.eScore.ToString() +" / "+ GameManager.Instance.VictoryCondition;
             m_TxtNLives.text = e.eNLives.ToString();
             m_TxtBestScore.text = e.eBestScore.ToString();
         }

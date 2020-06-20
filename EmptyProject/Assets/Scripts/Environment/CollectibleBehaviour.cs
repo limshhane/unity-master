@@ -25,4 +25,34 @@ public class CollectibleBehaviour : SimpleGameStateObserver, IScore
             Destroy(gameObject);
         }
     }
+
+    #region Events subscription
+    public override void SubscribeEvents()
+    {
+        base.SubscribeEvents();
+        EventManager.Instance.AddListener<GoToNextLevelEvent>(GoToNextLevel);
+
+    }
+
+    public override void UnsubscribeEvents()
+    {
+        base.UnsubscribeEvents();
+        EventManager.Instance.RemoveListener<GoToNextLevelEvent>(GoToNextLevel);
+    }
+    #endregion
+
+    protected override void GameMenu(GameMenuEvent e)
+    {
+        Destroy(gameObject);
+    }
+
+    protected override void GameOver(GameOverEvent e)
+    {
+        Destroy(gameObject);
+    }
+
+    private void GoToNextLevel(GoToNextLevelEvent e)
+    {
+        Destroy(gameObject);
+    }
 }

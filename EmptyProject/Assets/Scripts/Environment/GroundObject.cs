@@ -10,6 +10,7 @@ public class GroundObject : SimpleGameStateObserver
     [SerializeField] Transform chunkPos;
     [SerializeField] GameObject chunkPrefab;
     [SerializeField] GameObject Obstacle;
+    [SerializeField] GameObject piecePrefab;
     private static int ObstacleSpawnFrequency = Constants.ObstacleSpawnFrequency;
 
 
@@ -20,6 +21,8 @@ public class GroundObject : SimpleGameStateObserver
         {
             setObstaclePosition(Obstacle);
             GameObject obs = Instantiate(Obstacle, Obstacle.transform.position, Quaternion.identity);
+            float hauteur_obs = piecePrefab.GetComponent<Renderer>().bounds.size.y + obs.GetComponent<Renderer>().bounds.size.y / 2;
+            GameObject piecette = Instantiate(piecePrefab, Obstacle.transform.position + new Vector3(0,hauteur_obs+2,0) , Quaternion.identity);
             obs.transform.SetParent(chunkPos);
             ObstacleSpawnFrequency = Constants.ObstacleSpawnFrequency;
         }
@@ -36,10 +39,10 @@ public class GroundObject : SimpleGameStateObserver
     private void setObstaclePosition(GameObject Obstacle)
     {
         Vector3 chunkPosVector = chunkPos.position;
-        float randomX = Random.Range(chunkPosVector.x - 4, chunkPosVector.x + 4);
-        float randomZ = Random.Range(chunkPosVector.z - 4, chunkPosVector.z + 4);
-        float randomY = Random.Range(0, chunkPosVector.y + 4);
-        Vector3 v = new Vector3(randomX, randomY, randomZ);
+        float randomX = Random.Range(chunkPosVector.x-chunkPrefab.GetComponent<Renderer>().bounds.size.x/2, chunkPosVector.x + chunkPrefab.GetComponent<Renderer>().bounds.size.x/2);
+        float randomZ = Random.Range(chunkPosVector.z, chunkPosVector.z+ chunkPrefab.GetComponent<Renderer>().bounds.size.x/2);
+        
+        Vector3 v = new Vector3(randomX, 0, randomZ);
         Obstacle.transform.position = v;
     }
 

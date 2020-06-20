@@ -39,7 +39,9 @@
 
         #region Score
         private bool levelComplete = false;
-        [SerializeField] float VictoryCondition;
+        [SerializeField] float m_VictoryCondition;
+        public float VictoryCondition { get => m_VictoryCondition;}
+
         private float m_Score;
         public float Score
 		{
@@ -57,7 +59,7 @@
 			set { PlayerPrefs.SetFloat("BEST_SCORE", value); }
 		}
 
-		void IncrementScore(float increment)
+        void IncrementScore(float increment)
 		{
 			SetScore(m_Score + increment);
 		}
@@ -65,7 +67,7 @@
 		void SetScore(float score, bool raiseEvent = true)
 		{ 
 			Score = score;
-            if(Score > VictoryCondition  && !levelComplete)
+            if(Score > m_VictoryCondition  && !levelComplete)
             {
                 Victory();
             }
@@ -166,7 +168,7 @@
 
             DecrementNLives(1);
 
-            if (m_NLives == 0)
+            if (m_NLives < 1)
             {
                 EventManager.Instance.Raise(new GameOverEvent());
             }
@@ -211,7 +213,8 @@
         #region GameState methods
         private void Menu()
 		{
-            levelComplete = false; 
+            levelComplete = false;
+            SetNLives(m_NStartLives);
 			SetTimeScale(1);
             SetScore(0);
             m_GameState = GameState.gameMenu;

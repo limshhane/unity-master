@@ -7,9 +7,12 @@ using SDD.Events;
 public class PlayerController : SimpleGameStateObserver, IScore
 {
     Rigidbody m_Rigidbody;
+    Renderer m_Renderer;
+    Color m_Color;
 
     [Header("Deplacement")]
     [Tooltip("Vitesse en m.s-1")]
+    [SerializeField] float m_MaxSpeed;
     [SerializeField] float m_ForwardSpeed;
     public float Speed { get { return m_ForwardSpeed; } }
 
@@ -31,7 +34,10 @@ public class PlayerController : SimpleGameStateObserver, IScore
     [SerializeField] private int m_Score;
     public int Score { get { return m_Score; } }
 
-    [Header("enemy")]
+    [Header("Invulnerability")]
+    [SerializeField] private int invulnerabilityTime;
+
+    [Header("Enemy")]
     [SerializeField] private float distanceFromPlayer;
     [SerializeField] public GameObject enemyWallPrefab;
     [SerializeField] public GameObject crosshairPrefab;
@@ -40,14 +46,20 @@ public class PlayerController : SimpleGameStateObserver, IScore
 
     private GameObject follower;
     float timer;
+    bool invincible;
+    bool canScore;
 
     protected override void Awake()
     {
         base.Awake();
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_Renderer = GetComponent<Renderer>();
+        m_Color = m_Renderer.material.color;
         timeBeforeAcceleration = m_TimeBetweenAcceleration;
         canJump = true;
         canShoot = true;
+        invincible = false;
+        canScore = true;
         enemyWall = Instantiate(enemyWallPrefab, new Vector3(0, enemyWallPrefab.GetComponent<Renderer>().bounds.size.y/2, distanceFromPlayer), Quaternion.identity);
         crosshair = Instantiate(crosshairPrefab, new Vector3(this.transform.position.x, m_BulletSpawnPoint.transform.position.y, enemyWall.transform.position.z-5),Quaternion.identity);
         crosshair.transform.SetParent(this.transform);
@@ -65,7 +77,7 @@ public class PlayerController : SimpleGameStateObserver, IScore
         Debug.Log("Is playing : " + GameManager.Instance.IsPlaying);
         timeBeforeAcceleration -= Time.deltaTime;
         
-        if (timeBeforeAcceleration < 0)
+        if (m_ForwardSpeed < m_MaxSpeed && timeBeforeAcceleration < 0)
         {
 
             m_ForwardSpeed += m_Acceleration;
@@ -76,7 +88,18 @@ public class PlayerController : SimpleGameStateObserver, IScore
             ShootBullet();
             StartCoroutine(ShootCoroutine());
         }
-        EventManager.Instance.Raise(new ScoreItemEvent() { eScore = this as IScore });
+        if (canScore)
+        {
+            EventManager.Instance.Raise(new ScoreItemEvent() { eScore = this as IScore });
+            StartCoroutine(ScoreCoroutine());
+        }
+    }
+
+    IEnumerator ScoreCoroutine()
+    {
+        canScore = false;
+        yield return new WaitForSeconds(1);
+        canScore = true;
     }
 
     IEnumerator ShootCoroutine()
@@ -108,7 +131,7 @@ public class PlayerController : SimpleGameStateObserver, IScore
         Vector3 forwardVect = transform.forward * m_ForwardSpeed * Time.fixedDeltaTime;
         m_Rigidbody.MovePosition(transform.position + forwardVect + horizontalVect);
         enemyWall.transform.position = new Vector3(0, enemyWall.GetComponent<Renderer>().bounds.size.y/2, this.transform.position.z+ distanceFromPlayer);
-        if (canJump && Input.GetKey("space"))
+        if (canJump && (Input.GetKey(KeyCode.UpArrow) || Input.GetButton("Jump") ))
         {
             StartCoroutine(JumpCoroutine());
         }
@@ -119,9 +142,29 @@ public class PlayerController : SimpleGameStateObserver, IScore
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log(name + " Collision with " + collision.gameObject.name);
-            EventManager.Instance.Raise(new PlayerHasBeenHitEvent() { ePlayerController = this });
+            if (!invincible) {
+                Debug.Log(name + " Collision with " + collision.gameObject.name);
+                EventManager.Instance.Raise(new PlayerHasBeenHitEvent() { ePlayerController = this });
+                Destroy(collision.gameObject);
+                StartCoroutine(InvicibilityCoroutine());
+            }
+            else
+            {
+                Destroy(collision.gameObject);
+            }
         }
+    }
+
+    IEnumerator InvicibilityCoroutine()
+    {
+        invincible = true;
+        //m_Color.a = 1f;
+        Color c = new Color(0, 255, 255);
+        m_Renderer.material.color = c;
+        yield return new WaitForSeconds(invulnerabilityTime);
+        m_Color.a = 1f;
+        m_Renderer.material.color = m_Color;
+        invincible = false;
     }
 
     private void OnTriggerEnter(Collider collider)

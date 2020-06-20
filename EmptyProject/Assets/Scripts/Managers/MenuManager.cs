@@ -4,10 +4,12 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+    using UnityEngine.EventSystems;
 	using UnityEngine;
 	using SDD.Events;
+    using UnityEngine.UI;
 
-	public class MenuManager : Manager<MenuManager>
+    public class MenuManager : Manager<MenuManager>
 	{
 
 		[Header("MenuManager")]
@@ -32,7 +34,7 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
             EventManager.Instance.AddListener<TimerBeforePlayEvent>(TimerBeforePlay);
             //Level
             EventManager.Instance.AddListener<GoToNextLevelEvent>(GoToNextLevel);
-            EventManager.Instance.AddListener<LevelButtonClickedEvent>(LevelButtonClicked);
+            //EventManager.Instance.AddListener<LevelButtonClickedEvent>(LevelButtonClicked);
 
         }
 
@@ -43,10 +45,7 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
 
             //level
             EventManager.Instance.RemoveListener<GoToNextLevelEvent>(GoToNextLevel);
-            EventManager.Instance.RemoveListener<LevelButtonClickedEvent>(LevelButtonClicked);
-
-
-
+            //EventManager.Instance.RemoveListener<LevelButtonClickedEvent>(LevelButtonClicked);
 
         }
         #endregion
@@ -122,11 +121,6 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
 			EventManager.Instance.Raise(new QuitButtonClickedEvent());
 		}
 
-        public void LevelMenuButtonHasBeenClick()
-        {
-            OpenPanel(m_PanelLevelMenu);
-        }
-
         #region Level
         public void LevelOneButtonHasBeenClick()
         {
@@ -141,11 +135,11 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
             EventManager.Instance.Raise(new LevelButtonClickedEvent() { levelIndex = 2 });
         }
 
-        public void LevelButtonClicked(LevelButtonClickedEvent e)
-        {
-            //Debug.Log("OUI LEVEL BUTTON");
-            EventManager.Instance.Raise(new PlayButtonClickedEvent());
-        }
+        //public void LevelButtonClicked(LevelButtonClickedEvent e)
+        //{
+        //    Debug.Log("OUI LEVEL BUTTON");
+        //    EventManager.Instance.Raise(new PlayButtonClickedEvent());
+        //}
         #endregion
 
         public void TimerBeforePlay()
@@ -156,7 +150,13 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
         #endregion
 
         #region Callbacks to GameManager events
-
+        public void LevelMenuButtonHasBeenClick()
+        {
+            OpenPanel(m_PanelLevelMenu);
+            EventSystem.current.SetSelectedGameObject(null);
+            Button button = GameObject.Find("Level1Button").GetComponent<Button>();
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
+        }
 
         private void GoToNextLevel(GoToNextLevelEvent e)
         {
@@ -167,7 +167,10 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
         protected override void GameMenu(GameMenuEvent e)
 		{
 			OpenPanel(m_PanelMainMenu);
-		}
+            EventSystem.current.SetSelectedGameObject(null);
+            Button button = GameObject.Find("PlayButton").GetComponent<Button>();
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
+        }
 
 		protected override void GamePlay(GamePlayEvent e)
 		{
@@ -177,7 +180,10 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
 		protected override void GamePause(GamePauseEvent e)
 		{
 			OpenPanel(m_PanelInGameMenu);
-		}
+            EventSystem.current.SetSelectedGameObject(null);
+            Button button = GameObject.Find("ResumeButton").GetComponent<Button>();
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
+        }
 
 		protected override void GameResume(GameResumeEvent e)
 		{
@@ -187,11 +193,17 @@ namespace LIM_TRAN_HOUACINE_NGUYEN
 		protected override void GameOver(GameOverEvent e)
 		{
 			OpenPanel(m_PanelGameOver);
-		}
+            EventSystem.current.SetSelectedGameObject(null);
+            Button button = GameObject.Find("MainMenuButton").GetComponent<Button>();
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
+        }
 
         protected override void GameVictory(GameVictoryEvent e)
         {
             OpenPanel(m_PanelVictory);
+            EventSystem.current.SetSelectedGameObject(null);
+            Button button = GameObject.Find("NextLevelButton").GetComponent<Button>();
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
         }
 
         public void NextLevelButtonHasBeenClicked()

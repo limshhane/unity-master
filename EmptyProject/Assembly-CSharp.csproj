@@ -76,8 +76,9 @@
     <Compile Include="Assets\Scripts\Common\Singleton.cs" />
     <Compile Include="Assets\Scripts\Common\SingletonGameStateObserver.cs" />
     <Compile Include="Assets\Scripts\Constants.cs" />
-    <Compile Include="Assets\Scripts\EnemyBehaviour.cs" />
-    <Compile Include="Assets\Scripts\EnemyWallBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyBulletBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyWallBehaviour.cs" />
     <Compile Include="Assets\Scripts\Environment\CollectibleBehaviour.cs" />
     <Compile Include="Assets\Scripts\Environment\CubeObstacle.cs" />
     <Compile Include="Assets\Scripts\Environment\GroundBehaviour.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Scripts\EventManager\EventManager.cs" />
     <Compile Include="Assets\Scripts\EventManager\IEventHandler.cs" />
     <Compile Include="Assets\Scripts\IScore.cs" />
+    <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\HudManager.cs" />
     <Compile Include="Assets\Scripts\Managers\LevelManager.cs" />
@@ -155,6 +157,18 @@
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
       <HintPath>C:/Users/HH/Documents/ESIEE/UNITY/unity-master/EmptyProject/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder">
+      <HintPath>C:/Users/HH/Documents/ESIEE/UNITY/unity-master/EmptyProject/Library/ScriptAssemblies/Unity.ProBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.Editor">
+      <HintPath>C:/Users/HH/Documents/ESIEE/UNITY/unity-master/EmptyProject/Library/ScriptAssemblies/Unity.ProBuilder.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
+      <HintPath>C:/Users/HH/Documents/ESIEE/UNITY/unity-master/EmptyProject/Library/ScriptAssemblies/Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AddOns.Editor">
+      <HintPath>C:/Users/HH/Documents/ESIEE/UNITY/unity-master/EmptyProject/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

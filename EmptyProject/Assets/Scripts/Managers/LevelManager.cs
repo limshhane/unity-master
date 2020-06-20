@@ -180,8 +180,8 @@
 
         private void LevelButtonClicked(LevelButtonClickedEvent e)
         {
-            //Debug.Log("OUI LEVEL BUTTON");
             m_CurrentLevelIndex = e.levelIndex;
+            EventManager.Instance.Raise(new GamePlayEvent() { });
         }
         
 
